@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // R2/CDN hosts are public; skip SSRF private-IP blocks on the VPS optimizer.
+    dangerouslyAllowLocalIP: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -11,6 +13,7 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "i.pravatar.cc",
+        pathname: "/**",
       },
       {
         protocol: "https",

@@ -236,6 +236,7 @@ export function ProductDetail({
                   priority
                   sizes="(max-width: 1024px) 100vw, 1024px"
                   className="object-cover"
+                  unoptimized={/^https?:\/\//i.test(product.image)}
                 />
               ) : (
                 <div className="grid h-full place-items-center bg-bg-tertiary text-sm text-text-muted">

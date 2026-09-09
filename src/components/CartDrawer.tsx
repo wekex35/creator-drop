@@ -91,6 +91,7 @@ export function CartDrawer() {
                       fill
                       sizes="64px"
                       className="object-cover"
+                      unoptimized={/^https?:\/\//i.test(item.image)}
                     />
                   </div>
                   <div className="min-w-0 flex-1">

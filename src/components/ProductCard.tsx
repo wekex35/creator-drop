@@ -24,6 +24,7 @@ export function ProductCard({ product }: { product: Product }) {
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
             className="object-cover transition duration-500 group-hover:scale-[1.04]"
+            unoptimized={/^https?:\/\//i.test(product.image)}
           />
         ) : (
           <div className="grid h-full place-items-center text-xs text-text-muted">

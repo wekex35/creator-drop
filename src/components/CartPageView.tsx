@@ -83,6 +83,7 @@ export function CartPageView() {
                           fill
                           sizes="112px"
                           className="object-cover"
+                          unoptimized={/^https?:\/\//i.test(item.image)}
                         />
                       </div>
                       <div className="min-w-0 pt-1">
