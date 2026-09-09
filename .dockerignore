@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log*
+.git
+.gitignore
+.next
+.env*
+!.env.example
+mong-creds
+.dokploy-creds
+README.md
+bunle-urls.md
+scripts
+tmp
+*.md
+.DS_Store
+public/products
+public/samples
