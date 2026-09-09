@@ -35,7 +35,11 @@ yarn-error.log*
 .env*
 !.env.example
 mong-creds
+.dokploy-creds
 
+# local media staging (served from Cloudflare R2 / store.creatordrop.in)
+/public/products/
+/public/samples/
 # vercel
 .vercel
 
