@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import { CartProvider } from "@/context/CartContext";
+import { SITE_NAME, SITE_URL } from "@/data/contact";
 import "./globals.css";
 
 const heading = Outfit({
@@ -16,9 +17,18 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CreatorDrop – Premium Digital Packs for Creators",
+  metadataBase: new URL(SITE_URL),
+  title: `${SITE_NAME} – Premium Digital Packs for Creators`,
   description:
     "CreatorDrop offers reel bundles, AI content packs, and ready-to-post creator resources to help you grow faster.",
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
