@@ -9,13 +9,21 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1128.0",
+    "@aws-sdk/s3-request-presigner": "^3.1128.0",
+    "@cashfreepayments/cashfree-js": "^1.0.7",
+    "axios": "^1.20.0",
+    "cashfree-pg": "^6.0.5",
+    "mongodb": "^7.6.0",
     "next": "16.3.4",
+    "openai": "^7.12.1",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^20.19.43",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
