@@ -14,6 +14,7 @@ import { EmailCapture } from "@/components/EmailCapture";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { PurchaseToast } from "@/components/PurchaseToast";
+import { SUPPORT_WHATSAPP } from "@/data/contact";
 import { listProducts } from "@/lib/products-db";
 
 export const dynamic = "force-dynamic";
@@ -43,7 +44,7 @@ export default async function Home() {
       <PurchaseToast />
 
       <a
-        href="https://wa.me/918368469060?text=Hi%20CreatorDrop%20—%20I%20have%20a%20question"
+        href={`${SUPPORT_WHATSAPP}?text=${encodeURIComponent("Hi CreatorDrop — I have a question")}`}
         target="_blank"
         rel="noreferrer"
         className="fixed bottom-5 right-5 z-20 inline-flex items-center gap-2 rounded-full bg-whatsapp px-4 py-3 text-sm font-extrabold text-[#052e16] shadow-[0_10px_30px_rgba(37,211,102,0.35)] transition hover:scale-[1.03]"

@@ -1,3 +1,5 @@
+import { SUPPORT_WHATSAPP } from "@/data/contact";
+
 export function WhatsAppCTA() {
   return (
     <section className="section-pad pb-8">
@@ -26,7 +28,7 @@ export function WhatsAppCTA() {
               <li>· Custom template help</li>
             </ul>
             <a
-              href="https://wa.me/918368469060"
+              href={SUPPORT_WHATSAPP}
               target="_blank"
               rel="noreferrer"
               className="btn-primary mt-8"
