@@ -673,30 +673,28 @@ export function ProductDetail({
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-accent/40 bg-black/95 px-3 py-1.5 backdrop-blur-xl sm:px-6 sm:py-2">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 sm:gap-6">
-          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <p className="shrink-0 text-[10px] font-bold leading-tight tracking-wide text-accent sm:text-xs">
-              🚨
-              <span className="ml-1 hidden sm:inline">Few Mins Left..</span>
-              <span className="ml-1 sm:hidden">Few Mins</span>
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-accent/40 bg-black/95 px-2.5 py-1.5 backdrop-blur-xl sm:px-6 sm:py-2">
+        <div className="mx-auto flex max-w-5xl items-center gap-2 sm:justify-between sm:gap-6">
+          <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:flex-none sm:gap-3">
+            <p className="hidden shrink-0 text-xs font-bold leading-tight tracking-wide text-accent sm:block">
+              🚨 Few Mins Left..
             </p>
-            <div className="inline-flex min-w-[9.5rem] items-stretch overflow-hidden rounded-md border border-accent/80 sm:min-w-[14rem]">
-              <div className="flex-1 px-3 py-1 text-center sm:px-6 sm:py-1.5">
-                <p className="font-display text-lg font-extrabold leading-none tabular-nums text-accent sm:text-2xl">
+            <div className="inline-flex min-w-0 flex-1 items-stretch overflow-hidden rounded-md border border-accent/80 sm:min-w-[14rem] sm:flex-none">
+              <div className="min-w-0 flex-1 px-2 py-1 text-center sm:px-6 sm:py-1.5">
+                <p className="font-display text-base font-extrabold leading-none tabular-nums text-accent sm:text-2xl">
                   {pad(minutes)}
                 </p>
-                <p className="mt-0.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-white/80 sm:text-[10px]">
-                  Minutes
+                <p className="mt-0.5 text-[7px] font-semibold uppercase tracking-[0.1em] text-white/80 sm:text-[10px]">
+                  Min
                 </p>
               </div>
-              <div className="w-px bg-accent/50" />
-              <div className="flex-1 px-3 py-1 text-center sm:px-6 sm:py-1.5">
-                <p className="font-display text-lg font-extrabold leading-none tabular-nums text-accent sm:text-2xl">
+              <div className="w-px shrink-0 bg-accent/50" />
+              <div className="min-w-0 flex-1 px-2 py-1 text-center sm:px-6 sm:py-1.5">
+                <p className="font-display text-base font-extrabold leading-none tabular-nums text-accent sm:text-2xl">
                   {pad(seconds)}
                 </p>
-                <p className="mt-0.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-white/80 sm:text-[10px]">
-                  Seconds
+                <p className="mt-0.5 text-[7px] font-semibold uppercase tracking-[0.1em] text-white/80 sm:text-[10px]">
+                  Sec
                 </p>
               </div>
             </div>
@@ -706,7 +704,7 @@ export function ProductDetail({
             type="button"
             disabled={loading || !ready}
             onClick={() => void buyNow()}
-            className="btn-shine min-w-[10.5rem] shrink-0 rounded-md bg-[linear-gradient(135deg,#FF7A00_0%,#FF3500_100%)] px-5 py-2 text-xs font-extrabold uppercase tracking-wide text-white shadow-[0_0_24px_rgba(255,122,0,0.4)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:min-w-[18rem] sm:px-14 sm:py-2.5 sm:text-base"
+            className="btn-shine shrink-0 rounded-md bg-[linear-gradient(135deg,#FF7A00_0%,#FF3500_100%)] px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-wide text-white shadow-[0_0_24px_rgba(255,122,0,0.4)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:min-w-[18rem] sm:px-14 sm:py-2.5 sm:text-base"
           >
             {loading ? "Paying…" : "Get It Now"}
           </button>
