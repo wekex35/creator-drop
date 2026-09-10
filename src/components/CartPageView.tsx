@@ -160,9 +160,12 @@ export function CartPageView() {
                   payment.
                 </p>
                 {error ? (
-                  <p className="text-sm text-accent-soft" role="alert">
+                  <div
+                    className="rounded-xl border border-accent/30 bg-accent/10 px-3 py-3 text-sm leading-relaxed text-accent-soft"
+                    role="alert"
+                  >
                     {error}
-                  </p>
+                  </div>
                 ) : null}
                 <button
                   type="button"

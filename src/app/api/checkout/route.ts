@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCashfree, getCashfreeMode, getCashfreeReturnBaseUrl } from "@/lib/cashfree";
+import { friendlyPaymentError } from "@/lib/payment-errors";
 import { buildLineItems, createOrder } from "@/lib/orders-db";
 import { getProductById, getProductRecord } from "@/lib/products-db";
 
@@ -159,16 +160,5 @@ export async function POST(request: Request) {
 }
 
 function extractCashfreeError(error: unknown) {
-  if (typeof error === "object" && error !== null) {
-    const maybe = error as {
-      response?: { data?: { message?: string } };
-      message?: string;
-    };
-    return (
-      maybe.response?.data?.message ||
-      maybe.message ||
-      "Failed to create payment order"
-    );
-  }
-  return "Failed to create payment order";
+  return friendlyPaymentError(error);
 }

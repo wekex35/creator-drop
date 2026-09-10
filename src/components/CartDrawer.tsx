@@ -150,9 +150,12 @@ export function CartDrawer() {
             </span>
           </div>
           {(error || localError) && (
-            <p className="mb-3 text-sm text-accent-soft" role="alert">
+            <div
+              className="mb-3 rounded-xl border border-accent/30 bg-accent/10 px-3 py-3 text-sm leading-relaxed text-accent-soft"
+              role="alert"
+            >
               {localError || error}
-            </p>
+            </div>
           )}
           <Link
             href="/cart"

@@ -7,6 +7,7 @@ import { getDeliveryUrl } from "@/data/delivery";
 import { getProduct } from "@/data/products";
 import { formatINR } from "@/lib/money";
 import { loadPendingOrder, type PendingOrder } from "@/lib/orders";
+import { friendlyPaymentError } from "@/lib/payment-errors";
 
 type DeliveryLink = {
   id: string;
@@ -67,9 +68,7 @@ export function PaymentStatusView() {
         setData(payload.data);
       } catch (err) {
         if (!cancelled) {
-          setError(
-            err instanceof Error ? err.message : "Could not verify payment",
-          );
+          setError(friendlyPaymentError(err));
         }
       } finally {
         if (!cancelled) setLoading(false);

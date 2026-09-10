@@ -7,6 +7,7 @@ import {
   savePendingOrder,
   type CheckoutCustomer,
 } from "@/lib/orders";
+import { friendlyPaymentError } from "@/lib/payment-errors";
 
 type CashfreeMode = "sandbox" | "production";
 
@@ -115,7 +116,11 @@ export function useCashfreeCheckout() {
         };
 
         if (!payload.success || !payload.data?.paymentSessionId) {
-          throw new Error(payload.error || "Failed to create payment order");
+          throw new Error(
+            friendlyPaymentError(
+              payload.error || "Failed to create payment order",
+            ),
+          );
         }
 
         const {
@@ -143,7 +148,11 @@ export function useCashfreeCheckout() {
         });
 
         if (result?.error) {
-          throw new Error(result.error.message || "Checkout was cancelled");
+          throw new Error(
+            friendlyPaymentError(
+              result.error.message || "Checkout was cancelled",
+            ),
+          );
         }
 
         const verifyResponse = await fetch("/api/verify-payment", {
@@ -159,7 +168,11 @@ export function useCashfreeCheckout() {
         };
 
         if (!verifyPayload.success) {
-          throw new Error(verifyPayload.error || "Could not verify payment");
+          throw new Error(
+            friendlyPaymentError(
+              verifyPayload.error || "Could not verify payment",
+            ),
+          );
         }
 
         const paid = verifyPayload.data?.orderStatus === "PAID";
@@ -171,9 +184,7 @@ export function useCashfreeCheckout() {
             : `Payment status: ${verifyPayload.data?.orderStatus ?? "UNKNOWN"}`,
         };
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Checkout failed. Try again.";
-        setError(message);
+        setError(friendlyPaymentError(err));
         return null;
       } finally {
         setLoading(false);
