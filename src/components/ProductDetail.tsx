@@ -675,14 +675,14 @@ export function ProductDetail({
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-accent/40 bg-black/95 px-2.5 py-1.5 backdrop-blur-xl sm:px-6 sm:py-2">
-        <div className="mx-auto flex max-w-5xl items-center gap-2 sm:justify-between sm:gap-6">
-          <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:flex-none sm:gap-3">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-accent/40 bg-black/95 px-2.5 py-2 backdrop-blur-xl sm:px-6 sm:py-2">
+        <div className="mx-auto flex max-w-5xl items-stretch gap-2 sm:items-center sm:justify-between sm:gap-6">
+          <div className="flex min-w-0 shrink-0 items-stretch sm:flex-none sm:items-center sm:gap-3">
             <p className="hidden shrink-0 text-xs font-bold leading-tight tracking-wide text-accent sm:block">
               🚨 Few Mins Left..
             </p>
-            <div className="inline-flex min-w-0 flex-1 items-stretch overflow-hidden rounded-md border border-accent/80 sm:min-w-[14rem] sm:flex-none">
-              <div className="min-w-0 flex-1 px-2 py-1 text-center sm:px-6 sm:py-1.5">
+            <div className="inline-flex w-[7.25rem] items-stretch overflow-hidden rounded-md border border-accent/80 sm:w-auto sm:min-w-[14rem]">
+              <div className="min-w-0 flex-1 px-2 py-1.5 text-center sm:px-6 sm:py-1.5">
                 <p className="font-display text-base font-extrabold leading-none tabular-nums text-accent sm:text-2xl">
                   {pad(minutes)}
                 </p>
@@ -691,7 +691,7 @@ export function ProductDetail({
                 </p>
               </div>
               <div className="w-px shrink-0 bg-accent/50" />
-              <div className="min-w-0 flex-1 px-2 py-1 text-center sm:px-6 sm:py-1.5">
+              <div className="min-w-0 flex-1 px-2 py-1.5 text-center sm:px-6 sm:py-1.5">
                 <p className="font-display text-base font-extrabold leading-none tabular-nums text-accent sm:text-2xl">
                   {pad(seconds)}
                 </p>
@@ -706,7 +706,7 @@ export function ProductDetail({
             type="button"
             disabled={loading || !ready}
             onClick={() => void buyNow()}
-            className="btn-shine shrink-0 rounded-md bg-[linear-gradient(135deg,#FF7A00_0%,#FF3500_100%)] px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-wide text-white shadow-[0_0_24px_rgba(255,122,0,0.4)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:min-w-[18rem] sm:px-14 sm:py-2.5 sm:text-base"
+            className="btn-shine flex flex-1 items-center justify-center rounded-md bg-[linear-gradient(135deg,#FF7A00_0%,#FF3500_100%)] px-3 py-3 text-sm font-extrabold uppercase tracking-wide text-white shadow-[0_0_24px_rgba(255,122,0,0.4)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:min-w-[18rem] sm:flex-none sm:px-14 sm:py-2.5 sm:text-base"
           >
             {loading ? "Paying…" : "Get It Now"}
           </button>
