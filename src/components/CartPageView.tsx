@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CustomerFields } from "@/components/CustomerFields";
+import { PaymentLoadingDialog } from "@/components/PaymentLoadingDialog";
 import { useCart } from "@/context/CartContext";
 import { useCashfreeCheckout } from "@/hooks/useCashfreeCheckout";
 import { formatINR } from "@/lib/money";
@@ -14,7 +15,8 @@ export function CartPageView() {
   const router = useRouter();
   const { items, total, setQuantity, removeItem, clearCart, count } =
     useCart();
-  const { ready, loading, error, startCheckout } = useCashfreeCheckout();
+  const { ready, loading, loadingMessage, error, startCheckout } =
+    useCashfreeCheckout();
   const [customer, setCustomer] = useState<CheckoutCustomer>({
     name: "",
     email: "",
@@ -36,6 +38,7 @@ export function CartPageView() {
 
   return (
     <div className="section-pad pb-20 pt-6 md:pt-10">
+      <PaymentLoadingDialog open={loading} message={loadingMessage} />
       <div className="section-inner">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h1 className="font-display text-4xl font-extrabold tracking-tight md:text-5xl">

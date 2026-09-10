@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CustomerFields } from "@/components/CustomerFields";
+import { PaymentLoadingDialog } from "@/components/PaymentLoadingDialog";
 import { useCart } from "@/context/CartContext";
 import { discountPercent, type Product } from "@/data/products";
 import { useCashfreeCheckout } from "@/hooks/useCashfreeCheckout";
@@ -154,7 +155,7 @@ export function ProductDetail({
 }) {
   const { addItem } = useCart();
   const router = useRouter();
-  const { ready, loading, error, setError, startCheckout } =
+  const { ready, loading, loadingMessage, error, setError, startCheckout } =
     useCashfreeCheckout();
   const { hours, minutes, seconds } = useOfferCountdown(product.id);
   const off = discountPercent(product);
@@ -211,6 +212,7 @@ export function ProductDetail({
 
   return (
     <>
+      <PaymentLoadingDialog open={loading} message={loadingMessage} />
       <div className="border-b border-accent/40 bg-[linear-gradient(90deg,#FF7A00_0%,#FF3500_100%)] px-4 py-2.5 text-center text-sm font-extrabold text-white">
         🔥 {off}% OFF SALE ENDING SOON — GET IT FOR {formatINR(product.price)}
       </div>

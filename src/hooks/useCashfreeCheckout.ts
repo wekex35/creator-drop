@@ -40,6 +40,9 @@ export function useCashfreeCheckout() {
       : "sandbox",
   );
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState(
+    "Opening secure payment…",
+  );
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -89,6 +92,7 @@ export function useCashfreeCheckout() {
       }
 
       setLoading(true);
+      setLoadingMessage("Creating your order…");
 
       try {
         const response = await fetch("/api/checkout", {
@@ -132,6 +136,7 @@ export function useCashfreeCheckout() {
         } = payload.data;
 
         // SDK mode must match the env that created payment_session_id
+        setLoadingMessage("Preparing Cashfree checkout…");
         const sdk = await ensureMode(mode);
 
         savePendingOrder({
@@ -142,6 +147,7 @@ export function useCashfreeCheckout() {
           createdAt: Date.now(),
         });
 
+        setLoadingMessage("Opening secure payment…");
         const result = await sdk.checkout({
           paymentSessionId,
           redirectTarget: "_modal",
@@ -155,6 +161,7 @@ export function useCashfreeCheckout() {
           );
         }
 
+        setLoadingMessage("Confirming payment…");
         const verifyResponse = await fetch("/api/verify-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -188,6 +195,7 @@ export function useCashfreeCheckout() {
         return null;
       } finally {
         setLoading(false);
+        setLoadingMessage("Opening secure payment…");
       }
     },
     [ensureMode],
@@ -196,6 +204,7 @@ export function useCashfreeCheckout() {
   return {
     ready: Boolean(cashfree),
     loading,
+    loadingMessage,
     error,
     setError,
     startCheckout,

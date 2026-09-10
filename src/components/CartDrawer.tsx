@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { PaymentLoadingDialog } from "@/components/PaymentLoadingDialog";
 import { useCart } from "@/context/CartContext";
 import { useCashfreeCheckout } from "@/hooks/useCashfreeCheckout";
 import { formatINR } from "@/lib/money";
@@ -24,7 +25,8 @@ export function CartDrawer() {
     total,
     clearCart,
   } = useCart();
-  const { ready, loading, error, startCheckout } = useCashfreeCheckout();
+  const { ready, loading, loadingMessage, error, startCheckout } =
+    useCashfreeCheckout();
   const [localError, setLocalError] = useState("");
 
   async function handleCheckout() {
@@ -48,6 +50,7 @@ export function CartDrawer() {
 
   return (
     <>
+      <PaymentLoadingDialog open={loading} message={loadingMessage} />
       <div
         className={`fixed inset-0 z-40 bg-black/60 transition ${
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
