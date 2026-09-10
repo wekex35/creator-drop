@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDeliveryUrl } from "@/data/delivery";
-import { getCashfree } from "@/lib/cashfree";
+import { getCashfree, isCashfreeTestMode } from "@/lib/cashfree";
 import {
   getOrderById,
   orderDeliveryLinks,
@@ -19,6 +19,7 @@ export async function POST(request: Request) {
       );
     }
 
+    const testMode = isCashfreeTestMode();
     const cashfree = getCashfree();
     const [order, payments] = await Promise.all([
       cashfree.PGFetchOrder(orderId),
@@ -42,13 +43,21 @@ export async function POST(request: Request) {
         .filter(Boolean) ??
       [];
 
-    const deliveries = existing
+    const deliveriesRaw = existing
       ? orderDeliveryLinks(existing)
       : productIds.map((id) => ({
           id,
           title: id,
           deliveryUrl: getDeliveryUrl(id),
         }));
+
+    const deliveries = testMode
+      ? deliveriesRaw.map(({ id, title }) => ({
+          id,
+          title,
+          deliveryUrl: "",
+        }))
+      : deliveriesRaw;
 
     return NextResponse.json({
       success: true,
@@ -60,6 +69,8 @@ export async function POST(request: Request) {
         orderNote: order.data.order_note,
         productIds,
         deliveries,
+        downloadsEnabled: !testMode,
+        testMode,
         customer: existing?.customer ?? null,
         paymentDetails: payments.data ?? [],
       },

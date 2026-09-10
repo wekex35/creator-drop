@@ -22,6 +22,8 @@ type VerifyData = {
   orderNote?: string;
   productIds: string[];
   deliveries?: DeliveryLink[];
+  downloadsEnabled?: boolean;
+  testMode?: boolean;
 };
 
 export function PaymentStatusView() {
@@ -80,11 +82,12 @@ export function PaymentStatusView() {
     };
   }, [orderId]);
 
-  const productIds =
-    data?.productIds?.length
-      ? data.productIds
-      : pending?.productIds ?? [];
+  const productIds = data?.productIds?.length
+    ? data.productIds
+    : (pending?.productIds ?? []);
   const paid = data?.orderStatus === "PAID";
+  const testMode = data?.testMode === true || data?.downloadsEnabled === false;
+  const downloadsEnabled = !testMode;
 
   return (
     <div className="section-pad pb-20 pt-6 md:pt-10">
@@ -116,9 +119,24 @@ export function PaymentStatusView() {
             </h1>
             <p className="mt-3 text-text-secondary">
               {paid
-                ? "Your digital packs are unlocked. Download links are below."
+                ? downloadsEnabled
+                  ? "Your digital packs are unlocked. Download links are below."
+                  : "Payment verified in test mode. Downloads stay locked until live Cashfree credentials are enabled."
                 : "If you completed payment just now, refresh in a few seconds."}
             </p>
+
+            {paid && testMode ? (
+              <div className="mt-6 rounded-2xl border border-accent/30 bg-accent/10 px-4 py-4 text-sm leading-relaxed text-text-secondary">
+                <p className="font-semibold text-accent-soft">
+                  Test checkout — downloads disabled
+                </p>
+                <p className="mt-1">
+                  This store is still using Cashfree sandbox / TEST credentials.
+                  Test users can&apos;t download pack PDFs. Switch to production
+                  Cashfree keys to unlock real delivery links.
+                </p>
+              </div>
+            ) : null}
 
             <div className="mt-6 flex items-center justify-between border-y border-line py-4">
               <span className="text-text-secondary">Amount</span>
@@ -135,22 +153,37 @@ export function PaymentStatusView() {
                   const title =
                     fromApi?.title ??
                     product?.title ??
-                    pending?.titles.find((_, i) => pending.productIds[i] === id) ??
+                    pending?.titles.find(
+                      (_, i) => pending.productIds[i] === id,
+                    ) ??
                     id;
+                  const href =
+                    downloadsEnabled && fromApi?.deliveryUrl
+                      ? fromApi.deliveryUrl
+                      : downloadsEnabled
+                        ? getDeliveryUrl(id)
+                        : "";
+
                   return (
                     <li
                       key={id}
                       className="flex flex-col gap-3 border-b border-line pb-4 sm:flex-row sm:items-center sm:justify-between"
                     >
                       <p className="text-sm font-semibold leading-snug">{title}</p>
-                      <a
-                        href={fromApi?.deliveryUrl ?? getDeliveryUrl(id)}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="btn-primary shrink-0 text-center text-sm"
-                      >
-                        Open download
-                      </a>
+                      {downloadsEnabled && href ? (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="btn-primary shrink-0 text-center text-sm"
+                        >
+                          Open download
+                        </a>
+                      ) : (
+                        <span className="inline-flex shrink-0 items-center justify-center rounded-full border border-line bg-bg-tertiary px-4 py-2 text-center text-xs font-semibold uppercase tracking-wide text-text-muted">
+                          Test user · can&apos;t download
+                        </span>
+                      )}
                     </li>
                   );
                 })}

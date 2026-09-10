@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isCashfreeTestMode } from "@/lib/cashfree";
 import { getOrderById, orderDeliveryLinks } from "@/lib/orders-db";
 
 type Props = {
@@ -24,6 +25,15 @@ export async function GET(_request: Request, { params }: Props) {
       );
     }
 
+    const testMode = isCashfreeTestMode();
+    const deliveries = testMode
+      ? orderDeliveryLinks(order).map(({ id: itemId, title }) => ({
+          id: itemId,
+          title,
+          deliveryUrl: "",
+        }))
+      : orderDeliveryLinks(order);
+
     return NextResponse.json({
       success: true,
       data: {
@@ -33,8 +43,12 @@ export async function GET(_request: Request, { params }: Props) {
         amount: order.amount,
         currency: order.currency,
         customer: order.customer,
-        items: order.items,
-        deliveries: orderDeliveryLinks(order),
+        items: order.items.map((item) =>
+          testMode ? { ...item, deliveryUrl: "" } : item,
+        ),
+        deliveries,
+        downloadsEnabled: !testMode,
+        testMode,
         paidAt: order.paidAt,
         createdAt: order.createdAt,
       },
