@@ -3,7 +3,6 @@ import { LegalPage, LegalSection } from "@/components/LegalPage";
 import {
   SITE_NAME,
   SUPPORT_EMAIL,
-  SUPPORT_PHONE,
 } from "@/data/contact";
 
 export const metadata: Metadata = {
@@ -57,9 +56,9 @@ export default function RefundPolicyPage() {
             className="font-semibold text-accent hover:text-accent-soft"
           >
             {SUPPORT_EMAIL}
-          </a>{" "}
-          or WhatsApp {SUPPORT_PHONE}. We will make reasonable efforts to help
-          you access the product you purchased.
+          </a>
+          . We will make reasonable efforts to help you access the product you
+          purchased.
         </p>
         <p>Technical support does not constitute a refund or return.</p>
       </LegalSection>

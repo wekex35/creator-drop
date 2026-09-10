@@ -4,7 +4,6 @@ import {
   BUSINESS_ADDRESS,
   SITE_NAME,
   SUPPORT_EMAIL,
-  SUPPORT_PHONE,
 } from "@/data/contact";
 
 export const metadata: Metadata = {
@@ -173,8 +172,8 @@ export default function PrivacyPolicyPage() {
             className="font-semibold text-accent hover:text-accent-soft"
           >
             {SUPPORT_EMAIL}
-          </a>
-          , call {SUPPORT_PHONE}, or write to {BUSINESS_ADDRESS}.
+          </a>{" "}
+          or write to {BUSINESS_ADDRESS}.
         </p>
       </LegalSection>
     </LegalPage>

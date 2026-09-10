@@ -1,4 +1,4 @@
-import { SUPPORT_EMAIL, SUPPORT_PHONE } from "@/data/contact";
+import { SUPPORT_EMAIL } from "@/data/contact";
 
 export type ProductCategory =
   | "all"
@@ -545,7 +545,7 @@ export const faqs = [
   },
   {
     q: "How can I contact support?",
-    a: `Reach us on WhatsApp ${SUPPORT_PHONE} or email ${SUPPORT_EMAIL}. We typically reply within 24 hours.`,
+    a: `Reach us by email at ${SUPPORT_EMAIL}. We typically reply within 24 hours.`,
   },
 ];
 

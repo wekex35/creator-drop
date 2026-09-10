@@ -2,7 +2,7 @@ import { SUPPORT_WHATSAPP } from "@/data/contact";
 
 export function WhatsAppCTA() {
   return (
-    <section className="section-pad pb-8">
+    <section id="contact" className="section-pad scroll-mt-20 pb-8">
       <div className="section-inner overflow-hidden rounded-[2rem] border border-line bg-[linear-gradient(135deg,#121224_0%,#05050d_50%,#1a0f08_100%)]">
         <div className="grid items-center gap-10 p-8 md:grid-cols-2 md:p-12">
           <div>

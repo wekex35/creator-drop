@@ -3,7 +3,6 @@ import {
   COMPANY_NAME,
   SITE_NAME,
   SUPPORT_EMAIL,
-  SUPPORT_PHONE,
   SUPPORT_WHATSAPP,
 } from "@/data/contact";
 
@@ -104,7 +103,6 @@ export function Footer() {
                   {SUPPORT_EMAIL}
                 </a>
               </li>
-              <li>{SUPPORT_PHONE}</li>
               <li>
                 <Link href="/refund-policy" className="hover:text-text-primary">
                   Refund Policy
