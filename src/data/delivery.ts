@@ -27,25 +27,23 @@ export function getContentDownloadUrl(productId: string) {
   return contentByProductId[productId] ?? DEFAULT_CONTENT_URL;
 }
 
-const MEDIA_PUBLIC_BASE = (
-  process.env.NEXT_PUBLIC_R2_PUBLIC_BASE_URL ||
-  process.env.R2_PUBLIC_BASE_URL ||
-  "https://store.creatordrop.in"
-).replace(/\/$/, "");
+/**
+ * Marker stored on products / order line items.
+ * Real download URLs are minted only after payment via /api/download.
+ */
+export const PRIVATE_DELIVERY_MARKER = "private:r2-pdf";
 
-/** Public CDN URL for the branded delivery PDF customers receive. */
-export function getDeliveryPdfUrl(productId: string) {
-  return `${MEDIA_PUBLIC_BASE}/creatordrop/deliveries/${productId}.pdf`;
+/** @deprecated public CDN delivery — kept only for old data cleanup detection */
+export function isPublicCdnDeliveryUrl(url: string) {
+  return /\/creatordrop\/deliveries\/[^/?#]+\.pdf/i.test(url);
 }
 
-/** @deprecated alias — customers receive the PDF, not the raw Drive folder. */
-export const DEFAULT_DELIVERY_URL = getDeliveryPdfUrl("ai-baby");
+export function getDeliveryUrl(_productId: string) {
+  return PRIVATE_DELIVERY_MARKER;
+}
 
 export const deliveryByProductId: Record<string, string> = Object.fromEntries(
-  Object.keys(contentByProductId).map((id) => [id, getDeliveryPdfUrl(id)]),
+  Object.keys(contentByProductId).map((id) => [id, PRIVATE_DELIVERY_MARKER]),
 );
 
-/** Post-payment download link (branded PDF on Cloudflare R2). */
-export function getDeliveryUrl(productId: string) {
-  return deliveryByProductId[productId] ?? getDeliveryPdfUrl(productId);
-}
+export const DEFAULT_DELIVERY_URL = PRIVATE_DELIVERY_MARKER;

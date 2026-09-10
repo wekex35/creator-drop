@@ -1,5 +1,6 @@
 import type { Collection, WithId } from "mongodb";
 import { getDeliveryUrl } from "@/data/delivery";
+import { buildSecureDownloadUrl } from "@/lib/delivery-access";
 import { getDb } from "@/lib/mongodb";
 
 export type OrderStatus =
@@ -196,9 +197,12 @@ function mapCashfreeStatus(status: string): OrderStatus {
 }
 
 export function orderDeliveryLinks(order: OrderRecord) {
+  const paid = order.status === "PAID";
   return order.items.map((item) => ({
     id: item.id,
     title: item.title,
-    deliveryUrl: item.deliveryUrl || getDeliveryUrl(item.id),
+    deliveryUrl: paid
+      ? buildSecureDownloadUrl(order.orderId, item.id)
+      : "",
   }));
 }

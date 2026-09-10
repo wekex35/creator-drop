@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState, type ReactNode } from "react";
+import { PRIVATE_DELIVERY_MARKER } from "@/data/delivery";
 import { formatINR } from "@/lib/money";
 import { extractPinId, pinEmbedSrc } from "@/lib/sample-media";
 
@@ -102,7 +103,7 @@ function emptyForm(): FormState {
     proofName: "Verified buyer",
     countLabel: "",
     samples: "",
-    deliveryUrl: "",
+    deliveryUrl: PRIVATE_DELIVERY_MARKER,
     active: true,
   };
 }
@@ -272,7 +273,7 @@ export function AdminCatalog({
       ...next,
       id: "",
       title: `${source.title} (copy)`,
-      deliveryUrl: "",
+      deliveryUrl: PRIVATE_DELIVERY_MARKER,
       featured: false,
     });
   }
@@ -556,7 +557,7 @@ export function AdminCatalog({
         throw new Error("Set a sale price");
       }
       if (!editingId && !form.deliveryUrl.trim()) {
-        throw new Error("Paste the Google Drive / download link");
+        throw new Error("Delivery marker missing — use private:r2-pdf");
       }
 
       const payload = formToPayload(form, editingId);
@@ -906,15 +907,20 @@ export function AdminCatalog({
                   </Field>
                 </div>
 
-                <Field label="Download / Drive link *">
+                <Field label="Delivery mode">
                   <input
-                    value={form.deliveryUrl}
+                    value={form.deliveryUrl || PRIVATE_DELIVERY_MARKER}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, deliveryUrl: e.target.value }))
                     }
-                    placeholder="Paste Google Drive or Mega link"
+                    placeholder={PRIVATE_DELIVERY_MARKER}
                     className={inputClass}
                   />
+                  <p className="mt-1.5 text-xs text-text-muted">
+                    Keep <code className="text-text-secondary">{PRIVATE_DELIVERY_MARKER}</code> —
+                    buyers get a paid-only signed PDF link after checkout. Drive
+                    links stay inside the private PDF.
+                  </p>
                 </Field>
 
                 <Field label="What buyers get">

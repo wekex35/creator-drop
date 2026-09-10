@@ -1,5 +1,6 @@
 import {
   DeleteObjectCommand,
+  GetObjectCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
@@ -205,6 +206,27 @@ const getRemoteImageSignedUrl = async (key: string, bucket: string) => {
   );
 };
 
+/** Presigned GET for a private object (deliveries, etc.). */
+const getPrivateObjectSignedUrl = async (input: {
+  key: string;
+  bucket?: string;
+  expiresIn?: number;
+  contentType?: string;
+  contentDisposition?: string;
+}) => {
+  const client = initMediaS3Client();
+  return getSignedUrl(
+    client,
+    new GetObjectCommand({
+      Bucket: input.bucket || MEDIA_BUCKET,
+      Key: input.key.replace(/^\//, ""),
+      ResponseContentType: input.contentType,
+      ResponseContentDisposition: input.contentDisposition,
+    }),
+    { expiresIn: input.expiresIn ?? 900 },
+  );
+};
+
 const deleteFileFromMediaBucket = async (key: string): Promise<void> => {
   try {
     const client = initMediaS3Client();
@@ -237,6 +259,7 @@ export {
   uploadFileToMediaBucket,
   uploadCreatordropAsset,
   getRemoteImageSignedUrl,
+  getPrivateObjectSignedUrl,
   initMediaS3Client,
   deleteFileFromMediaBucket,
   extractFileKeyFromUrl,

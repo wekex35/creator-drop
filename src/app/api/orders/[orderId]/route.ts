@@ -26,13 +26,15 @@ export async function GET(_request: Request, { params }: Props) {
     }
 
     const testMode = isCashfreeTestMode();
-    const deliveries = testMode
-      ? orderDeliveryLinks(order).map(({ id: itemId, title }) => ({
+    const paid = order.status === "PAID";
+    const downloadsEnabled = paid && !testMode;
+    const deliveries = downloadsEnabled
+      ? orderDeliveryLinks(order)
+      : orderDeliveryLinks(order).map(({ id: itemId, title }) => ({
           id: itemId,
           title,
           deliveryUrl: "",
-        }))
-      : orderDeliveryLinks(order);
+        }));
 
     return NextResponse.json({
       success: true,
@@ -43,11 +45,9 @@ export async function GET(_request: Request, { params }: Props) {
         amount: order.amount,
         currency: order.currency,
         customer: order.customer,
-        items: order.items.map((item) =>
-          testMode ? { ...item, deliveryUrl: "" } : item,
-        ),
+        items: order.items.map(({ deliveryUrl: _ignored, ...item }) => item),
         deliveries,
-        downloadsEnabled: !testMode,
+        downloadsEnabled,
         testMode,
         paidAt: order.paidAt,
         createdAt: order.createdAt,

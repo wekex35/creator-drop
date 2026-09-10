@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { getDeliveryUrl } from "@/data/delivery";
 import { getCashfree, isCashfreeTestMode } from "@/lib/cashfree";
 import {
   getOrderById,
@@ -48,16 +47,19 @@ export async function POST(request: Request) {
       : productIds.map((id) => ({
           id,
           title: id,
-          deliveryUrl: getDeliveryUrl(id),
+          deliveryUrl: "",
         }));
 
-    const deliveries = testMode
-      ? deliveriesRaw.map(({ id, title }) => ({
+    const downloadsEnabled =
+      !testMode && cashfreeStatus === "PAID" && Boolean(existing);
+
+    const deliveries = downloadsEnabled
+      ? deliveriesRaw
+      : deliveriesRaw.map(({ id, title }) => ({
           id,
           title,
           deliveryUrl: "",
-        }))
-      : deliveriesRaw;
+        }));
 
     return NextResponse.json({
       success: true,
@@ -69,7 +71,7 @@ export async function POST(request: Request) {
         orderNote: order.data.order_note,
         productIds,
         deliveries,
-        downloadsEnabled: !testMode,
+        downloadsEnabled,
         testMode,
         customer: existing?.customer ?? null,
         paymentDetails: payments.data ?? [],

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getDeliveryUrl } from "@/data/delivery";
 import { getProduct } from "@/data/products";
 import { formatINR } from "@/lib/money";
 import { loadPendingOrder, type PendingOrder } from "@/lib/orders";
@@ -159,9 +158,7 @@ export function PaymentStatusView() {
                   const href =
                     downloadsEnabled && fromApi?.deliveryUrl
                       ? fromApi.deliveryUrl
-                      : downloadsEnabled
-                        ? getDeliveryUrl(id)
-                        : "";
+                      : "";
 
                   return (
                     <li
@@ -169,7 +166,7 @@ export function PaymentStatusView() {
                       className="flex flex-col gap-3 border-b border-line pb-4 sm:flex-row sm:items-center sm:justify-between"
                     >
                       <p className="text-sm font-semibold leading-snug">{title}</p>
-                      {downloadsEnabled && href ? (
+                      {href ? (
                         <a
                           href={href}
                           target="_blank"
@@ -180,7 +177,9 @@ export function PaymentStatusView() {
                         </a>
                       ) : (
                         <span className="inline-flex shrink-0 items-center justify-center rounded-full border border-line bg-bg-tertiary px-4 py-2 text-center text-xs font-semibold uppercase tracking-wide text-text-muted">
-                          Test user · can&apos;t download
+                          {testMode
+                            ? "Test user · can&apos;t download"
+                            : "Download unavailable"}
                         </span>
                       )}
                     </li>
