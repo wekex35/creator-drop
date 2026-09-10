@@ -7,11 +7,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "thesocialgame.in",
-        pathname: "/cdn/shop/**",
-      },
-      {
-        protocol: "https",
         hostname: "i.pravatar.cc",
         pathname: "/**",
       },

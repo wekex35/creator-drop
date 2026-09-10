@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  COMPANY_NAME,
   SITE_NAME,
   SUPPORT_EMAIL,
   SUPPORT_PHONE,
@@ -130,7 +131,13 @@ export function Footer() {
         </div>
 
         <div className="section-inner mt-12 flex flex-col gap-3 border-t border-line pt-6 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 {SITE_NAME} · All rights reserved.</p>
+          <div className="space-y-1">
+            <p>© 2026 {SITE_NAME} · All rights reserved.</p>
+            <p>
+              Powered by{" "}
+              <span className="text-text-secondary">{COMPANY_NAME}</span>
+            </p>
+          </div>
           <p>Secure Checkout · Instant Delivery · PCI Compliant · 10,000+ Creators</p>
         </div>
       </div>

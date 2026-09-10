@@ -40,6 +40,10 @@ mong-creds
 # local media staging (served from Cloudflare R2 / store.creatordrop.in)
 /public/products/
 /public/samples/
+
+# generated delivery PDFs
+/output/
+
 # vercel
 .vercel
 
