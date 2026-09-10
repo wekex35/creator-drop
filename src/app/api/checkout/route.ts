@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAppUrl, getCashfree } from "@/lib/cashfree";
+import { getCashfree, getCashfreeMode, getCashfreeReturnBaseUrl } from "@/lib/cashfree";
 import { buildLineItems, createOrder } from "@/lib/orders-db";
 import { getProductById, getProductRecord } from "@/lib/products-db";
 
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
 
     const orderId = `cd_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     const cashfree = getCashfree();
-    const appUrl = getAppUrl();
+    const returnBase = getCashfreeReturnBaseUrl();
     const phone = phoneDigits.slice(-10);
 
     const response = await cashfree.PGCreateOrder({
@@ -103,7 +103,7 @@ export async function POST(request: Request) {
         customer_phone: phone,
       },
       order_meta: {
-        return_url: `${appUrl}/payment/status?order_id={order_id}`,
+        return_url: `${returnBase}/payment/status?order_id={order_id}`,
       },
       order_tags: {
         products: lineItems.map((item) => item.id).join(",").slice(0, 255),
@@ -111,14 +111,28 @@ export async function POST(request: Request) {
     });
 
     const data = response.data;
+    const paymentSessionId = data.payment_session_id;
+    if (!paymentSessionId) {
+      console.error("Cashfree order missing payment_session_id", data);
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Cashfree did not return a payment session. Check API version / credentials.",
+        },
+        { status: 502 },
+      );
+    }
+
     const persistedItems = buildLineItems(lineItems);
+    const mode = getCashfreeMode();
 
     await createOrder({
       orderId: data.order_id ?? orderId,
       amount: Number(data.order_amount ?? orderAmount),
       customer: { name, email, phone },
       items: persistedItems,
-      paymentSessionId: data.payment_session_id,
+      paymentSessionId,
       cashfreeStatus: data.order_status,
     });
 
@@ -126,10 +140,11 @@ export async function POST(request: Request) {
       success: true,
       data: {
         orderId: data.order_id,
-        paymentSessionId: data.payment_session_id,
+        paymentSessionId,
         orderAmount: data.order_amount,
         orderCurrency: data.order_currency,
         orderStatus: data.order_status,
+        mode,
         items: persistedItems,
       },
     });

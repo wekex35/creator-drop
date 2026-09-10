@@ -13,6 +13,10 @@ export function isCashfreeTestMode() {
   return env !== "production" || publicMode !== "production";
 }
 
+export function getCashfreeMode(): "sandbox" | "production" {
+  return isCashfreeTestMode() ? "sandbox" : "production";
+}
+
 export function getCashfree() {
   const appId = process.env.CASHFREE_APP_ID;
   const secretKey = process.env.CASHFREE_SECRET_KEY;
@@ -22,7 +26,7 @@ export function getCashfree() {
   }
 
   const env =
-    process.env.CASHFREE_ENV === "production" && !/^test/i.test(appId)
+    getCashfreeMode() === "production"
       ? CFEnvironment.PRODUCTION
       : CFEnvironment.SANDBOX;
 
@@ -34,4 +38,19 @@ export function getAppUrl() {
     process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
     "http://localhost:3000"
   );
+}
+
+/** Cashfree requires https return_url — never send localhost http. */
+export function getCashfreeReturnBaseUrl() {
+  const configured = (
+    process.env.CASHFREE_RETURN_BASE_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    ""
+  )
+    .trim()
+    .replace(/\/$/, "");
+
+  if (configured.startsWith("https://")) return configured;
+
+  return "https://creatordrop.in";
 }

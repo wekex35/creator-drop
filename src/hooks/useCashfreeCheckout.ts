@@ -1,12 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { CartItem } from "@/context/CartContext";
 import {
   isValidCustomer,
   savePendingOrder,
   type CheckoutCustomer,
 } from "@/lib/orders";
+
+type CashfreeMode = "sandbox" | "production";
 
 type CashfreeCheckout = {
   checkout: (options: {
@@ -24,8 +26,18 @@ type CheckoutResult = {
   message: string;
 };
 
+async function loadCashfree(mode: CashfreeMode) {
+  const { load } = await import("@cashfreepayments/cashfree-js");
+  return (await load({ mode })) as CashfreeCheckout;
+}
+
 export function useCashfreeCheckout() {
   const [cashfree, setCashfree] = useState<CashfreeCheckout | null>(null);
+  const modeRef = useRef<CashfreeMode>(
+    process.env.NEXT_PUBLIC_CASHFREE_MODE === "production"
+      ? "production"
+      : "sandbox",
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -34,13 +46,8 @@ export function useCashfreeCheckout() {
 
     async function init() {
       try {
-        const { load } = await import("@cashfreepayments/cashfree-js");
-        const mode =
-          process.env.NEXT_PUBLIC_CASHFREE_MODE === "production"
-            ? "production"
-            : "sandbox";
-        const instance = await load({ mode });
-        if (!cancelled) setCashfree(instance as CashfreeCheckout);
+        const instance = await loadCashfree(modeRef.current);
+        if (!cancelled) setCashfree(instance);
       } catch (err) {
         console.error(err);
         if (!cancelled) {
@@ -54,6 +61,14 @@ export function useCashfreeCheckout() {
       cancelled = true;
     };
   }, []);
+
+  const ensureMode = useCallback(async (mode: CashfreeMode) => {
+    if (cashfree && modeRef.current === mode) return cashfree;
+    modeRef.current = mode;
+    const instance = await loadCashfree(mode);
+    setCashfree(instance);
+    return instance;
+  }, [cashfree]);
 
   const startCheckout = useCallback(
     async (
@@ -69,11 +84,6 @@ export function useCashfreeCheckout() {
 
       if (!isValidCustomer(customer)) {
         setError("Enter a valid name, email, and 10-digit phone number.");
-        return null;
-      }
-
-      if (!cashfree) {
-        setError("Payment gateway is still loading. Try again in a moment.");
         return null;
       }
 
@@ -99,6 +109,7 @@ export function useCashfreeCheckout() {
             orderId: string;
             paymentSessionId: string;
             orderAmount: number;
+            mode?: CashfreeMode;
             items: Array<{ id: string; title: string }>;
           };
         };
@@ -107,8 +118,16 @@ export function useCashfreeCheckout() {
           throw new Error(payload.error || "Failed to create payment order");
         }
 
-        const { orderId, paymentSessionId, orderAmount, items: lineItems } =
-          payload.data;
+        const {
+          orderId,
+          paymentSessionId,
+          orderAmount,
+          items: lineItems,
+          mode = "sandbox",
+        } = payload.data;
+
+        // SDK mode must match the env that created payment_session_id
+        const sdk = await ensureMode(mode);
 
         savePendingOrder({
           orderId,
@@ -118,12 +137,12 @@ export function useCashfreeCheckout() {
           createdAt: Date.now(),
         });
 
-        const result = await cashfree.checkout({
+        const result = await sdk.checkout({
           paymentSessionId,
           redirectTarget: "_modal",
         });
 
-        if (result.error) {
+        if (result?.error) {
           throw new Error(result.error.message || "Checkout was cancelled");
         }
 
@@ -160,7 +179,7 @@ export function useCashfreeCheckout() {
         setLoading(false);
       }
     },
-    [cashfree],
+    [ensureMode],
   );
 
   return {
